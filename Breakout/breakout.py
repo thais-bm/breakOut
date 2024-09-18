@@ -38,3 +38,5 @@ while game_loop:
 
 pygame.quit()
 sys.exit()
+
+# Mensagem de alteração Teste
