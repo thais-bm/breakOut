@@ -36,8 +36,9 @@ ball_y = 360
 ball_dx = 5
 ball_dy = 5
 
+exibir_texto = True
 
-def main_menu():
+def main_menu(exibir_texto):
     lateral_bar = pygame.Surface((20, 1000))
     bottom_bar = pygame.Surface((720, 20))
     top_bar = pygame.Surface((720, 40))
@@ -52,8 +53,13 @@ def main_menu():
     bottom_rect = bottom_bar.get_rect(topleft=(0, 880))
 
     score_font = pygame.font.Font('assets/pong-score.ttf', 60)
-    score_text = pygame.font.Font.render(score_font, score_txt, False, COLOR_WHITE, None)
-    try_text = pygame.font.Font.render(score_font, try_txt, False, COLOR_WHITE, None)
+    text_font = pygame.font.Font('assets/ARCADE_I.TTF', 20)
+    score_text = pygame.font.Font.render(score_font, score_txt, False,
+                                         COLOR_WHITE, None)
+    try_text = pygame.font.Font.render(score_font, try_txt, False,
+                                       COLOR_WHITE, None)
+    start_text = pygame.font.Font.render(text_font, 'Press SPACE to start the game',False,
+                                         COLOR_WHITE, None)
     white_bar = pygame.Surface((15, 80))
     white_bar.fill(COLOR_WHITE)
 
@@ -74,9 +80,14 @@ def main_menu():
     screen.blit(blocks, (700, 865))
 
     screen.blit(try_text, (400, 50))
+
     screen.blit(score_text, (100, 130))
     screen.blit(white_bar, (50, 40))
 
+    if pygame.time.get_ticks() % 1000 < 100:
+        exibir_texto = not exibir_texto
+    if exibir_texto:
+        screen.blit(start_text, (75, 700))
 
 # Game loop
 while game_loop:
@@ -84,10 +95,13 @@ while game_loop:
     for event in pygame.event.get():
         if event.type == QUIT:
             game_loop = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE: #And main menu is working
+                print('Jogo deve iniciar!!!')
     screen.fill(COLOR_BLACK)
 
     # Main game here
-    main_menu()
+    main_menu(exibir_texto)
 
     # Load objects of the game here
     pygame.display.update()
