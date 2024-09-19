@@ -94,6 +94,7 @@ def create_scenario():
 
 
 def create_bricks():
+    print('estou funfando')
     for color_index, color in enumerate(LIST_COLORS):
         for fila in range(2):
             for pos in range(13):
@@ -108,8 +109,6 @@ def create_bricks():
                     green_bricks.append(block)
                 elif color == COLOR_YELLOW:
                     yellow_bricks.append(block)
-    for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
-        brick.draw(screen)
 
 
 def main_menu():
@@ -122,6 +121,9 @@ def main_menu():
     if show_text:
         screen.blit(start_text, (75, 700))
 
+
+# Create blocks once
+create_bricks()
 
 # Game loop
 while game_loop:
@@ -173,8 +175,11 @@ while game_loop:
     # Main game here
     screen.fill(COLOR_BLACK)
     create_scenario()
-    create_bricks()
     main_menu()
+
+    # Draw bricks
+    for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
+        brick.draw(screen)
 
     # Draw ball
     pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
