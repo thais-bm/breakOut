@@ -2,15 +2,17 @@
 import sys
 import pygame
 from pygame.locals import *
+import blocks
 
 # Colors
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
-COLOR_RED = (209, 13, 9)
-COLOR_GREEN = (3, 250, 61)
-COLOR_ORANGE = (253, 171, 4)
-COLOR_YELLOW = (232, 253, 39)
 COLOR_BLUE = (0, 184, 254)
+
+COLOR_RED = (209, 13, 9)
+COLOR_ORANGE = (253, 171, 4)
+COLOR_GREEN = (3, 250, 61)
+COLOR_YELLOW = (232, 253, 39)
 
 LIST_COLORS = [
     COLOR_RED, COLOR_ORANGE,
@@ -19,22 +21,17 @@ LIST_COLORS = [
 
 pygame.init()
 fps = 60
-fpsClock = pygame.time.Clock()
+
+clock = pygame.time.Clock()
 
 width = 720
 height = 1000
 screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Breakout Game")
 game_loop = True
 
 score_txt = '000'
 try_txt = '0'
-
-ball = pygame.Surface((20, 20))
-ball.fill(COLOR_WHITE)
-ball_x = 640
-ball_y = 360
-ball_dx = 5
-ball_dy = 5
 
 exibir_texto = True
 
@@ -42,7 +39,11 @@ def main_menu(exibir_texto):
     lateral_bar = pygame.Surface((20, 1000))
     bottom_bar = pygame.Surface((720, 20))
     top_bar = pygame.Surface((720, 40))
+    white_bar = pygame.Surface((15, 80))
+    blocks = pygame.Surface((20, 50))
+    position = 200
 
+    white_bar.fill(COLOR_WHITE)
     lateral_bar.fill(COLOR_WHITE)
     top_bar.fill(COLOR_WHITE)
     bottom_bar.fill(COLOR_BLUE)
@@ -60,11 +61,6 @@ def main_menu(exibir_texto):
                                        COLOR_WHITE, None)
     start_text = pygame.font.Font.render(text_font, 'Press SPACE to start the game',False,
                                          COLOR_WHITE, None)
-    white_bar = pygame.Surface((15, 80))
-    white_bar.fill(COLOR_WHITE)
-
-    blocks = pygame.Surface((20, 50))
-    position = 200
 
     screen.blit(lateral_bar, right_rect)
     screen.blit(lateral_bar, left_rect)
@@ -75,19 +71,20 @@ def main_menu(exibir_texto):
         blocks.fill(LIST_COLORS[i])
         screen.blit(blocks, (0, position + 50*i))
         screen.blit(blocks, (700, position + 50*i))
+
     blocks.fill(COLOR_BLUE)
     screen.blit(blocks, (0, 865))
     screen.blit(blocks, (700, 865))
 
     screen.blit(try_text, (400, 50))
-
     screen.blit(score_text, (100, 130))
     screen.blit(white_bar, (50, 40))
 
-    if pygame.time.get_ticks() % 1000 < 100:
+    if pygame.time.get_ticks() % 1000 <= 100:
         exibir_texto = not exibir_texto
     if exibir_texto:
         screen.blit(start_text, (75, 700))
+
 
 # Game loop
 while game_loop:
@@ -96,7 +93,7 @@ while game_loop:
         if event.type == QUIT:
             game_loop = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE: #And main menu is working
+            if event.key == pygame.K_SPACE:
                 print('Jogo deve iniciar!!!')
     screen.fill(COLOR_BLACK)
 
@@ -106,7 +103,7 @@ while game_loop:
     # Load objects of the game here
     pygame.display.update()
     pygame.display.flip()
-    fpsClock.tick(fps)
+    clock.tick(fps)
 
 pygame.quit()
 sys.exit()
