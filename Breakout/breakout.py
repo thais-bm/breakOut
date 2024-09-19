@@ -44,7 +44,7 @@ paddle_move_right = False
 paddle_move_left = False
 
 # Draw Ball
-ball_size = 15
+ball_size = 10
 ball_x = width // 2 - ball_size // 2
 ball_y = height // 2 - ball_size // 2
 ball_dx = 5
@@ -133,29 +133,13 @@ while game_loop:
             game_loop = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             print('Jogo deve iniciar!!!')
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                paddle_move_right = True
 
-            if event.key == pygame.K_LEFT:
-                paddle_move_left = True
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                paddle_move_right = False
-
-            if event.key == pygame.K_LEFT:
-                paddle_move_left = False
-
-            if paddle_move_right:
-                paddle_x += paddle_speed
-            else:
-                paddle_x += 0
-
-            if paddle_move_left:
-                paddle_x -= paddle_speed
-            else:
-                paddle_x += 0
+    # paddle movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and paddle_x > 0:
+        paddle_x -= paddle_speed
+    if keys[pygame.K_RIGHT] and paddle_x < width - paddle_width:
+        paddle_x += paddle_speed
 
     # Move Ball
     ball_x += ball_dx
@@ -182,10 +166,14 @@ while game_loop:
         brick.draw(screen)
 
     # Draw ball
-    pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
+    ball = pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
 
     # Draw player paddle
-    pygame.draw.rect(screen, COLOR_BLUE, (paddle_x, paddle_y, paddle_width, paddle_height))
+    paddle = pygame.draw.rect(screen, COLOR_BLUE, (paddle_x, paddle_y, paddle_width, paddle_height))
+
+    # Ball collision with the paddle
+    if ball.colliderect(paddle) and ball_dy > 0:
+        ball_dy = -ball_dy
 
     # Load objects of the game here
     pygame.display.update()
