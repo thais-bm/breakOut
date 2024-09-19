@@ -33,6 +33,15 @@ game_loop = True
 score_txt = '000'
 try_txt = '0'
 
+<<<<<<< Updated upstream
+=======
+ball =
+ball_x = 640
+ball_y = 360
+ball_dx = 5
+ball_dy = 5
+
+>>>>>>> Stashed changes
 exibir_texto = True
 
 def main_menu(exibir_texto):
