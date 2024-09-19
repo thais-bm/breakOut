@@ -1,4 +1,3 @@
-
 import sys
 import pygame
 from pygame.locals import *
@@ -20,6 +19,7 @@ LIST_COLORS = [
 ]
 
 pygame.init()
+
 fps = 60
 
 clock = pygame.time.Clock()
@@ -33,6 +33,14 @@ game_loop = True
 score_txt = '000'
 try_txt = '0'
 
+# player
+paddle_speed = 6
+paddle_height = 25
+paddle_width = 100
+paddle_x = width // 2 - paddle_width // 2
+paddle_y = height - 130
+paddle_move_right = False
+paddle_move_left = False
 
 # Draw Ball
 ball_size = 15
@@ -41,10 +49,8 @@ ball_y = height // 2 - ball_size // 2
 ball_dx = 5
 ball_dy = 5
 
-
-
-
 exibir_texto = True
+
 
 def main_menu(exibir_texto):
     lateral_bar = pygame.Surface((20, 1000))
@@ -57,7 +63,7 @@ def main_menu(exibir_texto):
     white_bar.fill(COLOR_WHITE)
     lateral_bar.fill(COLOR_WHITE)
     top_bar.fill(COLOR_WHITE)
-    bottom_bar.fill(COLOR_BLUE)
+    # bottom_bar.fill(COLOR_BLUE)
 
     top_rect = top_bar.get_rect(topleft=(0, 0))
     left_rect = lateral_bar.get_rect(topleft=(0, 0))
@@ -70,7 +76,7 @@ def main_menu(exibir_texto):
                                          COLOR_WHITE, None)
     try_text = pygame.font.Font.render(score_font, try_txt, False,
                                        COLOR_WHITE, None)
-    start_text = pygame.font.Font.render(text_font, 'Press SPACE to start the game',False,
+    start_text = pygame.font.Font.render(text_font, 'Press SPACE to start the game', False,
                                          COLOR_WHITE, None)
 
     screen.blit(lateral_bar, right_rect)
@@ -80,8 +86,8 @@ def main_menu(exibir_texto):
 
     for i in range(len(LIST_COLORS)):
         blocks.fill(LIST_COLORS[i])
-        screen.blit(blocks, (0, position + 50*i))
-        screen.blit(blocks, (700, position + 50*i))
+        screen.blit(blocks, (0, position + 50 * i))
+        screen.blit(blocks, (700, position + 50 * i))
 
     blocks.fill(COLOR_BLUE)
     screen.blit(blocks, (0, 865))
@@ -99,18 +105,46 @@ def main_menu(exibir_texto):
 
 # Game loop
 while game_loop:
+
     # Get inputs here
     for event in pygame.event.get():
         if event.type == QUIT:
             game_loop = False
+
+        # A movimentação precisa de ajustes
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                paddle_move_right = True
+
+            if event.key == pygame.K_LEFT:
+                paddle_move_left = True
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_RIGHT:
+                paddle_move_right = False
+
+            if event.key == pygame.K_LEFT:
+                paddle_move_left = False
+
+
+
+            if paddle_move_right:
+                paddle_x += paddle_speed
+            else:
+                paddle_x += 0
+
+            if paddle_move_left:
+                paddle_x -= paddle_speed
+            else:
+                paddle_x += 0
+
             if event.key == pygame.K_SPACE:
                 print('Jogo deve iniciar!!!')
-# Move Ball
+    # Move Ball
     ball_x += ball_dx
     ball_y += ball_dy
 
-# Detect Collision
+    # Detect Collision
     if ball_x <= 15 or ball_x + ball_size >= width:
         ball_dx = -ball_dx
     if ball_y <= 35 or ball_y + ball_size >= height:
@@ -128,6 +162,9 @@ while game_loop:
 
     # Draw ball
     pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
+
+    # Draw player paddle
+    pygame.draw.rect(screen, COLOR_BLUE, (paddle_x, paddle_y, paddle_width, paddle_height))
 
     # Load objects of the game here
     pygame.display.update()
