@@ -93,6 +93,25 @@ def create_scenario():
     screen.blit(white_bar, (50, 40))
 
 
+def create_bricks():
+    for color_index, color in enumerate(LIST_COLORS):
+        for fila in range(2):
+            for pos in range(13):
+                x = 20 + 52.9 * pos
+                y = 200 + (color_index * 60) + (fila * 30)  # Adjust y position based on color
+                block = blocks.Brick(color, 45, 20, x, y)
+                if color == COLOR_RED:
+                    red_bricks.append(block)
+                elif color == COLOR_ORANGE:
+                    orange_bricks.append(block)
+                elif color == COLOR_GREEN:
+                    green_bricks.append(block)
+                elif color == COLOR_YELLOW:
+                    yellow_bricks.append(block)
+    for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
+        brick.draw(screen)
+
+
 def main_menu():
     show_text = True
     text_font = pygame.font.Font('assets/ARCADE_I.TTF', 20)
@@ -112,7 +131,6 @@ while game_loop:
             game_loop = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             print('Jogo deve iniciar!!!')
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 paddle_move_right = True
@@ -152,9 +170,10 @@ while game_loop:
     if ball_y >= 980 or ball_y + ball_size >= height:
         ball_dy = -ball_dy
 
-    screen.fill(COLOR_BLACK)
     # Main game here
+    screen.fill(COLOR_BLACK)
     create_scenario()
+    create_bricks()
     main_menu()
 
     # Draw ball
