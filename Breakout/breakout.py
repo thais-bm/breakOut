@@ -33,15 +33,17 @@ game_loop = True
 score_txt = '000'
 try_txt = '0'
 
-<<<<<<< Updated upstream
-=======
-ball =
-ball_x = 640
-ball_y = 360
+
+# Draw Ball
+ball_size = 15
+ball_x = width // 2 - ball_size // 2
+ball_y = height // 2 - ball_size // 2
 ball_dx = 5
 ball_dy = 5
 
->>>>>>> Stashed changes
+
+
+
 exibir_texto = True
 
 def main_menu(exibir_texto):
@@ -104,10 +106,28 @@ while game_loop:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 print('Jogo deve iniciar!!!')
+# Move Ball
+    ball_x += ball_dx
+    ball_y += ball_dy
+
+# Detect Collision
+    if ball_x <= 15 or ball_x + ball_size >= width:
+        ball_dx = -ball_dx
+    if ball_y <= 35 or ball_y + ball_size >= height:
+        ball_dy = -ball_dy
+
+    if ball_x >= 680 or ball_x + ball_size >= width:
+        ball_dx = -ball_dx
+    if ball_y >= 980 or ball_y + ball_size >= height:
+        ball_dy = -ball_dy
+
     screen.fill(COLOR_BLACK)
 
     # Main game here
     main_menu(exibir_texto)
+
+    # Draw ball
+    pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
 
     # Load objects of the game here
     pygame.display.update()
