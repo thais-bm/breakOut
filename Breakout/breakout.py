@@ -52,6 +52,15 @@ ball_y = height // 2 - ball_size // 2
 ball_dx = 5
 ball_dy = 5
 
+def score_display(point, score_txt):
+    score_txt = str(int(score_txt) + point)
+    if len(score_txt) == 1:
+        score_txt = '00'+score_txt
+    elif len(score_txt) == 2:
+        score_txt = '0'+score_txt
+
+    return score_txt
+
 
 def create_scenario():
     lateral_bar = pygame.Surface((20, 1000))
@@ -228,22 +237,26 @@ while breakout:
         for brick_list in [red_bricks]:  # Brick
             if brick_collision(ball, brick_list):
                 ball_dy *= -2
-                score_txt = str(int(score_txt)+7)
+                points = 7
+                score_txt = score_display(points, score_txt)
                 break
         for brick_list in [orange_bricks]:  # Brick
             if brick_collision(ball, brick_list):
                 ball_dy *= -1.5
-                score_txt = str(int(score_txt) + 5)
+                points = 5
+                score_txt = score_display(points, score_txt)
                 break
         for brick_list in [green_bricks]:  # Brick
             if brick_collision(ball, brick_list):
-                ball_dy *= -1.2
-                score_txt = str(int(score_txt) + 3)
+                ball_dy = -ball_dy
+                points = 3
+                score_txt = score_display(points, score_txt)
                 break
         for brick_list in [yellow_bricks]:  # Brick
             if brick_collision(ball, brick_list):
                 ball_dy = -ball_dy
-                score_txt = str(int(score_txt) + 1)
+                points = 1
+                score_txt = score_display(points, score_txt)
                 break
 
         if ball_y + ball_size >= height+10:
