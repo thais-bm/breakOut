@@ -35,7 +35,7 @@ try_txt = '0'
 start = False
 
 # player
-paddle_speed = 6
+paddle_speed = 10
 paddle_height = 25
 paddle_width = 100
 paddle_x = width // 2 - paddle_width // 2
@@ -125,6 +125,18 @@ def main_menu():
 # Create blocks once
 create_bricks()
 
+collision = False
+
+def brick_collision(ball, brick_list):
+    global collision
+    if not collision:
+        for brick in brick_list[:]:
+            if ball.colliderect(brick.Rect):
+                brick_list.remove(brick)
+                collision = True
+                return True
+    return False
+
 # Game loop
 while game_loop:
     # Get inputs here
@@ -148,8 +160,11 @@ while game_loop:
     # Detect Collision
     if ball_x <= 15 or ball_x + ball_size >= width:
         ball_dx = -ball_dx
+        collision = False
+
     if ball_y <= 35 or ball_y + ball_size >= height:
         ball_dy = -ball_dy
+        collision = False
 
     if ball_x >= 680 or ball_x + ball_size >= width:
         ball_dx = -ball_dx
@@ -174,6 +189,13 @@ while game_loop:
     # Ball collision with the paddle
     if ball.colliderect(paddle) and ball_dy > 0:
         ball_dy = -ball_dy
+        collision = False
+
+    # Brick collisions
+    for brick_list in [red_bricks, orange_bricks, green_bricks, yellow_bricks]:
+        if brick_collision(ball, brick_list):
+            ball_dy = -ball_dy
+            break
 
     # Load objects of the game here
     pygame.display.update()
