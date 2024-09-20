@@ -288,6 +288,20 @@ while breakout:
             hit_wall.play()
         if ball.colliderect(paddle) and ball_dy > 0:  # Paddle
             ball_dy = -ball_dy
+
+        # Insert the angle adjustment code
+            ball_position_on_paddle = (ball_x + ball_size / 2) - paddle_x
+            paddle_middle = paddle_width / 2
+
+            if ball_position_on_paddle < paddle_middle / 2:
+                ball_dx = -abs(ball_dx) - 2
+            elif ball_position_on_paddle < paddle_middle:
+                ball_dx = -abs(ball_dx)
+            elif ball_position_on_paddle < paddle_middle + paddle_middle / 2:
+                ball_dx = abs(ball_dx)
+            else:
+                ball_dx = abs(ball_dx) + 2
+
             paddle_hit_count = paddle_hit_count + 1
             if paddle_hit_count == 4 or paddle_hit_count == 12:
                 ball_dx *= 1.1
