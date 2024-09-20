@@ -3,6 +3,15 @@ import pygame
 from pygame.locals import *
 import blocks
 
+# Setup pygame
+pygame.init()
+fps = 60
+clock = pygame.time.Clock()
+width = 720
+height = 1000
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Breakout Game")
+
 # Colors
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
@@ -11,28 +20,20 @@ COLOR_RED = (209, 13, 9)
 COLOR_ORANGE = (253, 171, 4)
 COLOR_GREEN = (3, 250, 61)
 COLOR_YELLOW = (232, 253, 39)
-
 LIST_COLORS = [COLOR_RED, COLOR_ORANGE, COLOR_GREEN, COLOR_YELLOW]
 
+# Bricks
 red_bricks = []
 orange_bricks = []
 green_bricks = []
 yellow_bricks = []
+brick_group = []
+collision = False
 
-pygame.init()
-fps = 60
-clock = pygame.time.Clock()
-
-width = 720
-height = 1000
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Breakout Game")
+# Main loops
 breakout = True
 menu_loop = True
 game_loop = False
-
-score_txt = '000'
-try_txt = '0'
 
 # player
 paddle_speed = 10
@@ -50,11 +51,17 @@ ball_x = width // 2 - ball_size // 2
 ball_y = height // 2 - ball_size // 2
 ball_dx = 5
 ball_dy = 5
+top_hit = 0
+MAX_SPEED = 10
 
 # Sound effects
 hit_brick = pygame.mixer.Sound('assets/brick.wav')
 hit_paddle = pygame.mixer.Sound('assets/paddle.wav')
 hit_wall = pygame.mixer.Sound('assets/wall.wav')
+
+# Scores
+score_txt = '000'
+try_txt = '0'
 
 
 def score_display(point, score_txt):
@@ -107,7 +114,7 @@ def create_scenario():
     screen.blit(score_text, (100, 130))
     screen.blit(white_bar, (50, 40))
 
-    return bottom_bar, bottom_rect
+    return bottom_rect, top_rect
 
 
 def create_bricks():
@@ -125,6 +132,14 @@ def create_bricks():
                     green_bricks.append(block)
                 elif color == COLOR_YELLOW:
                     yellow_bricks.append(block)
+    brick_groups = [
+        (red_bricks, -1.5, 7),
+        (orange_bricks, -1.3, 5),
+        (green_bricks, -1.0, 3),
+        (yellow_bricks, -1.0, 1)
+    ]
+
+    return brick_groups
 
 
 def main_menu():
@@ -136,12 +151,6 @@ def main_menu():
         show_text = not show_text
     if show_text:
         screen.blit(start_text, (75, 700))
-
-
-# Create blocks once
-create_bricks()
-
-collision = False
 
 
 def brick_collision(ball, brick_list):
@@ -157,7 +166,28 @@ def brick_collision(ball, brick_list):
 
 
 while breakout:
-    # Game loop
+    # player
+    paddle_speed = 10
+    paddle_height = 25
+    paddle_width = 100
+    paddle_x = width // 2 - paddle_width // 2
+    paddle_y = height - 120
+    paddle_move_right = False
+    paddle_move_left = False
+    paddle_hit_count = 0
+
+    # Draw Ball
+    ball_size = 10
+    ball_x = width // 2 - ball_size // 2
+    ball_y = height // 2 - ball_size // 2
+    ball_dx = 5
+    ball_dy = 5
+    top_hit = 0
+
+    # Create blocks once
+    brick_groups = create_bricks()
+
+    # Menu loop
     while menu_loop:
         # Get inputs here
         for event in pygame.event.get():
@@ -165,7 +195,13 @@ while breakout:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                print('Jogo deve iniciar!!!')
+                # Reset game stats
+                score_txt = '000'
+                try_txt = '0'
+                ball_x = width // 2 - ball_size // 2
+                ball_y = height // 2 - ball_size // 2
+                ball_dx = 5
+                ball_dy = 5
                 game_loop = True
                 menu_loop = False
 
@@ -176,7 +212,7 @@ while breakout:
 
         # Main game here
         screen.fill(COLOR_BLACK)
-        bottom_bar, bottom_rect = create_scenario()
+        bottom_rect, top_rect = create_scenario()
         main_menu()
 
         # Draw bricks + ball
@@ -185,7 +221,7 @@ while breakout:
         ball = pygame.draw.rect(screen, COLOR_WHITE, (ball_x, ball_y, ball_size, ball_size))
 
         # Detect collision
-        if ball_x <= 15 or ball_x + ball_size >= width:  # Left
+        if ball_x <= 15 or ball_x + ball_size >= width:  # Left / Right
             ball_dx = -ball_dx
             hit_wall.play()
         if ball_y <= 35 or ball_y + ball_size >= height:  # Top
@@ -194,7 +230,7 @@ while breakout:
         if ball_x >= 680 or ball_x + ball_size >= width:  # Right
             ball_dx = -ball_dx
             hit_wall.play()
-        if ball.colliderect(bottom_rect) and ball_dy > 0:  # Bottom rect
+        if ball.colliderect(bottom_rect) and ball_dy > 0:  # Blue rect
             ball_dy = -ball_dy
             collision = False
             hit_wall.play()
@@ -208,8 +244,8 @@ while breakout:
         pygame.display.flip()
         clock.tick(fps)
 
+    # Game loop
     while game_loop:
-        # Get inputs here
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -228,7 +264,7 @@ while breakout:
 
         # Main game here
         screen.fill(COLOR_BLACK)
-        bottom_bar, bottom_rect = create_scenario()
+        bottom_rect, top_rect = create_scenario()
 
         # Draw bricks + ball + player
         for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
@@ -248,43 +284,22 @@ while breakout:
             hit_wall.play()
         if ball.colliderect(paddle) and ball_dy > 0:  # Paddle
             ball_dy = -ball_dy
-            # Ball Speed increase when u hit paddle 4 and 12 times
             paddle_hit_count = paddle_hit_count + 1
-            if paddle_hit_count == 4:
-                ball_dy *= -1.5
-            if paddle_hit_count == 12:
-                ball_dy *= -1.8
+            if paddle_hit_count == 4 or paddle_hit_count == 12:
+                ball_dx *= 1.1
+                ball_dy *= 1.1
             hit_paddle.play()
             collision = False
-        for brick_list in [red_bricks]:  # Brick
+
+        # Collision detection for blocks
+        for brick_list, speed_factor, points in brick_groups:
             if brick_collision(ball, brick_list):
-                ball_dy *= -2
-                points = 7
-                score_txt = score_display(points, score_txt)
-                hit_brick.play()
-                break
-        for brick_list in [orange_bricks]:  # Brick
-            if brick_collision(ball, brick_list):
-                ball_dy *= -1.5
-                points = 5
-                score_txt = score_display(points, score_txt)
-                hit_brick.play()
-                break
-        for brick_list in [green_bricks]:  # Brick
-            if brick_collision(ball, brick_list):
-                ball_dy = -ball_dy
-                points = 3
-                score_txt = score_display(points, score_txt)
-                hit_brick.play()
-                break
-        for brick_list in [yellow_bricks]:  # Brick
-            if brick_collision(ball, brick_list):
-                ball_dy = -ball_dy
-                points = 1
+                ball_dy *= speed_factor
                 score_txt = score_display(points, score_txt)
                 hit_brick.play()
                 break
 
+        # Ball misses
         if ball_y + ball_size >= height+10:
             try_txt = str(int(try_txt)+1)
             ball_x = width // 2 - ball_size // 2
@@ -293,9 +308,13 @@ while breakout:
             ball_dy = 5
             paddle_hit_count = 0
 
-            if int(try_txt) == 3:
+        # Condicao de derrota
+            if int(try_txt) == 4:
                 menu_loop = True
                 game_loop = False
+
+        # Condicao de vitoria: limpar os retangulos 2 vezes
+        # -> jogo não tem tela de game over
 
         # Load objects of the game here
         pygame.display.update()
