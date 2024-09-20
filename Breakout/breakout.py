@@ -262,6 +262,10 @@ while breakout:
         ball_x += ball_dx
         ball_y += ball_dy
 
+        # Speed Limit (2 * inicial speed)
+        ball_dx = max(-MAX_SPEED, min(MAX_SPEED, ball_dx))
+        ball_dy = max(-MAX_SPEED, min(MAX_SPEED, ball_dy))
+
         # Main game here
         screen.fill(COLOR_BLACK)
         bottom_rect, top_rect = create_scenario()
@@ -309,7 +313,7 @@ while breakout:
             paddle_hit_count = 0
 
         # Condicao de derrota
-            if int(try_txt) == 4:
+            if int(try_txt) == 3:
                 menu_loop = True
                 game_loop = False
 
