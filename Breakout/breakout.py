@@ -299,7 +299,6 @@ while breakout:
         # Detect collision
         if ball.colliderect(left_rect) and ball_dx < 0:  # Left
             ball_dx = -ball_dx
-            collision = False
             hit_wall.play()
         if ball.colliderect(top_rect) and ball_dy < 0:  # Top
             ball_dy = -ball_dy
@@ -310,7 +309,6 @@ while breakout:
             hit_wall.play()
         if ball.colliderect(right_rect) and ball_dx > 0:  # Right
             ball_dx = -ball_dx
-            collision = False
             hit_wall.play()
         if ball.colliderect(paddle) and ball_dy > 0:  # Paddle
             ball_dy = -ball_dy
@@ -358,8 +356,8 @@ while breakout:
                 menu_loop = True
                 game_loop = False
 
-        # Condicao de vitoria: limpar os retangulos 2 vezes
-        # -> jogo não tem tela de game over
+        # Winning condition: clean the bricks 2 times
+        # -> game doesn't have game over screen
         if len(red_bricks + orange_bricks + green_bricks + yellow_bricks) == 0:
             reset_game()
             win += 1

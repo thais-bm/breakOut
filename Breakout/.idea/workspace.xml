@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="477246fe-8c07-4711-9998-b9b9ac3c6953" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breakout.py" beforeDir="false" afterPath="$PROJECT_DIR$/breakout.py" afterDir="false" />
     </list>
@@ -56,7 +55,8 @@
       <option name="presentableId" value="Default" />
       <updated>1726946455313</updated>
       <workItem from="1726946457769" duration="3713000" />
-      <workItem from="1726950379785" duration="2997000" />
+      <workItem from="1726950379785" duration="5038000" />
+      <workItem from="1726957076948" duration="47000" />
     </task>
     <servers />
   </component>
@@ -64,6 +64,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/breakout_py$breakout.coverage" NAME="breakout Coverage Results" MODIFIED="1726954240782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/breakout_py$breakout.coverage" NAME="breakout Coverage Results" MODIFIED="1726956454285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
