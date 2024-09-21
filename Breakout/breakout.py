@@ -27,7 +27,7 @@ red_bricks = []
 orange_bricks = []
 green_bricks = []
 yellow_bricks = []
-brick_group = []
+brick_groups = []
 collision = False
 
 # Main loops
@@ -53,6 +53,7 @@ ball_dx = 5
 ball_dy = 5
 top_hit = 0
 MAX_SPEED = 10
+reduce_paddle = True
 
 # Scores + wins
 score_txt = '000'
@@ -63,6 +64,25 @@ win = 0
 hit_brick = pygame.mixer.Sound('assets/brick.wav')
 hit_paddle = pygame.mixer.Sound('assets/paddle.wav')
 hit_wall = pygame.mixer.Sound('assets/wall.wav')
+
+
+def reset_game():
+    global ball_x, ball_y, ball_dx, ball_dy, paddle_x, paddle_y, score_txt, lives, brick_groups
+    ball_x = width // 2 - ball_size // 2
+    ball_y = height // 2 - ball_size // 2
+    ball_dx = 5
+    ball_dy = 5
+    paddle_x = width // 2 - paddle_width // 2
+    paddle_y = height - 120
+
+    # Limpando as listas
+    yellow_bricks.clear()
+    green_bricks.clear()
+    orange_bricks.clear()
+    red_bricks.clear()
+    brick_groups.clear()
+
+    brick_groups = create_bricks()
 
 
 def score_display(point, score_txt):
@@ -250,9 +270,9 @@ while breakout:
 
         # paddle movement
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_a] and paddle_x > 0:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and paddle_x > 0:
             paddle_x -= paddle_speed
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d] and paddle_x < width - paddle_width:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and paddle_x < width - paddle_width:
             paddle_x += paddle_speed
 
         # Move Ball
@@ -280,6 +300,9 @@ while breakout:
             hit_wall.play()
         if ball.colliderect(top_rect) and ball_dy < 0:  # Top
             ball_dy = -ball_dy
+            if reduce_paddle:
+                paddle_height = paddle_height // 2
+                reduce_paddle = False
             collision = False
             hit_wall.play()
         if ball.colliderect(right_rect) and ball_dx > 0:  # Right
@@ -335,16 +358,12 @@ while breakout:
         # Condicao de vitoria: limpar os retangulos 2 vezes
         # -> jogo não tem tela de game over
         if len(red_bricks + orange_bricks + green_bricks + yellow_bricks) == 0:
-            win = 1
-            create_bricks()
-            ball_x = width // 2 - ball_size // 2
-            ball_y = height // 2 - ball_size // 2
-            ball_dx = 5
-            ball_dy = 5
-            paddle_hit_count = 0
-
+            reset_game()
+            win += 1
+        
         if win == 2:
             print('Fim de jogo!')
+
 
         # Load objects of the game here
         pygame.display.update()
