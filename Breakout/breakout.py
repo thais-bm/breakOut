@@ -74,6 +74,8 @@ def reset_game():
     ball_dy = 5
     paddle_x = width // 2 - paddle_width // 2
     paddle_y = height - 120
+    score_txt = '000'
+    try_txt = '0'
 
     # Limpando as listas
     yellow_bricks.clear()
@@ -217,8 +219,9 @@ while breakout:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                score_txt = '000'
+                reset_game()
                 try_txt = '0'
+                score_txt = '000'
                 game_loop = True
                 menu_loop = False
 
@@ -301,7 +304,7 @@ while breakout:
         if ball.colliderect(top_rect) and ball_dy < 0:  # Top
             ball_dy = -ball_dy
             if reduce_paddle:
-                paddle_height = paddle_height // 2
+                paddle_width = paddle_width // 2
                 reduce_paddle = False
             collision = False
             hit_wall.play()
@@ -360,7 +363,7 @@ while breakout:
         if len(red_bricks + orange_bricks + green_bricks + yellow_bricks) == 0:
             reset_game()
             win += 1
-        
+
         if win == 2:
             print('Fim de jogo!')
 
