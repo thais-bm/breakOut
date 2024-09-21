@@ -57,7 +57,7 @@ reduce_paddle = True
 
 # Scores + wins
 score_txt = '000'
-try_txt = '0'
+try_txt = '1'
 win = 0
 
 # Sound effects
@@ -75,7 +75,7 @@ def reset_game():
     paddle_x = width // 2 - paddle_width // 2
     paddle_y = height - 120
     score_txt = '000'
-    try_txt = '0'
+    try_txt = '1'
 
     # Limpando as listas
     yellow_bricks.clear()
@@ -220,7 +220,7 @@ while breakout:
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 reset_game()
-                try_txt = '0'
+                try_txt = '1'
                 score_txt = '000'
                 game_loop = True
                 menu_loop = False
@@ -354,7 +354,7 @@ while breakout:
             paddle_hit_count = 0
 
         # Condicao de derrota
-            if int(try_txt) == 3:
+            if int(try_txt) == 4:
                 menu_loop = True
                 game_loop = False
 
