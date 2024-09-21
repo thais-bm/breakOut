@@ -144,7 +144,7 @@ def create_bricks():
     for color_index, color in enumerate(LIST_COLORS):
         for fila in range(2):
             for pos in range(14):
-                x = 20 + 48.9 * pos
+                x = 20.4 + 48.9 * pos
                 y = 200 + (color_index * 60) + (fila * 30)  # Adjust y position based on color
                 block = blocks.Brick(color, 44, 20, x, y)
                 if color == COLOR_RED:
