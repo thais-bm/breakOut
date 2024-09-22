@@ -97,7 +97,8 @@ def score_display(point, score_txt):
     return score_txt
 
 
-def create_scenario():
+def create_scenario(menu):
+    blink= True
     lateral_bar = pygame.Surface((20, 1000))
     bottom_bar = pygame.Surface((720, 20))
     top_bar = pygame.Surface((720, 40))
@@ -122,6 +123,7 @@ def create_scenario():
 
     score_font = pygame.font.Font('assets/pong-score.ttf', 60)
     score_text = score_font.render(score_txt, False, COLOR_WHITE)
+    dummy_Text = score_font.render('000', False, COLOR_WHITE)
     try_text = score_font.render(try_txt, False, COLOR_WHITE)
 
     for i in range(len(LIST_COLORS)):
@@ -134,8 +136,14 @@ def create_scenario():
     screen.blit(blocks, (700, 865))
 
     screen.blit(try_text, (400, 50))
-    screen.blit(score_text, (100, 130))
     screen.blit(white_bar, (50, 40))
+    screen.blit(dummy_Text, (450, 130))
+
+    if pygame.time.get_ticks() % 1000 <= 500:
+        if not menu:
+            blink = not blink
+    if blink:
+        screen.blit(score_text, (100, 130))
 
     return bottom_rect, top_rect, right_rect, left_rect
 
@@ -174,6 +182,8 @@ def main_menu():
         show_text = not show_text
     if show_text:
         screen.blit(start_text, (75, 700))
+
+    return True
 
 
 def brick_collision(ball, brick_list):
@@ -232,8 +242,8 @@ while breakout:
 
         # Main game here
         screen.fill(COLOR_BLACK)
-        bottom_rect, top_rect, right_rect, left_rect = create_scenario()
-        main_menu()
+        menu = main_menu()
+        bottom_rect, top_rect, right_rect, left_rect = create_scenario(menu)
 
         # Draw bricks + ball
         for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
@@ -253,7 +263,7 @@ while breakout:
         if ball.colliderect(bottom_rect) and ball_dy > 0:  # Blue rect
             ball_dy = -ball_dy
             collision = False
-            hit_wall.play()
+            hit_paddle.play()
         for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:  # Bricks
             if ball.colliderect(brick.Rect) and ball_dy < 0:
                 ball_dy = -ball_dy
@@ -288,7 +298,8 @@ while breakout:
 
         # Main game here
         screen.fill(COLOR_BLACK)
-        bottom_rect, top_rect, right_rect, left_rect = create_scenario()
+        menu = False
+        bottom_rect, top_rect, right_rect, left_rect = create_scenario(menu)
 
         # Draw bricks + ball + player
         for brick in red_bricks + orange_bricks + green_bricks + yellow_bricks:
